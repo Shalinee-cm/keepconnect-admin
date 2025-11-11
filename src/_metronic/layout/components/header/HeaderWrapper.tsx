@@ -1,26 +1,34 @@
 
 import clsx from 'clsx'
 import React from 'react'
-import {Link} from 'react-router-dom'
-import {KTIcon, toAbsoluteUrl} from '../../../helpers'
-import {useLayout} from '../../core'
-import {Header} from './Header'
-import {DefaultTitle} from './page-title/DefaultTitle'
-import {Topbar} from './Topbar'
+import { Link } from 'react-router-dom'
+import { KTIcon, toAbsoluteUrl } from '../../../helpers'
+import { useLayout } from '../../core'
+import { Header } from './Header'
+import { DefaultTitle } from './page-title/DefaultTitle'
+import { Topbar } from './Topbar'
 
 export function HeaderWrapper() {
-  const {config, classes, attributes} = useLayout()
-  const {header, aside} = config
+  const { config, classes, attributes } = useLayout()
+  const { header, aside } = config
 
   return (
     <div
       id='kt_header'
-      className={clsx('header', classes.header.join(' '), 'align-items-stretch')}
+      className={clsx(
+        'header custom-header-bg',
+        classes.header.join(' '),
+        'align-items-stretch text-white'
+      )}
+      style={{
+        backgroundColor: '#E65454', // 👈 custom red background
+      }}
       data-kt-sticky='true'
       data-kt-sticky-name='header'
       data-kt-sticky-offset="{default: '200px', lg: '300px'}"
       {...attributes.headerMenu}
     >
+
       <div className={clsx(classes.headerContainer.join(' '), 'd-flex align-items-center')}>
         {/* begin::Aside mobile toggle */}
         {aside.display && (
@@ -52,12 +60,12 @@ export function HeaderWrapper() {
             <img
               alt='Logo'
               src={toAbsoluteUrl('media/logos/KeepConnect.svg')}
-              className='logo-default h-45px'
+              className='logo-default h-46px'
             />
             <img
               alt='Logo'
-              src={toAbsoluteUrl('media/logos/demo2-sticky.png')}
-              className='logo-sticky h-25px'
+              src={toAbsoluteUrl('media/logos/KeepConnect.svg')}
+              className='logo-sticky h-46px'
             />
           </Link>
         </div>

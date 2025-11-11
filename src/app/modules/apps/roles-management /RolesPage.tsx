@@ -24,10 +24,18 @@ const usersBreadcrumbs: Array<PageLink> = [
   },
 ]
 
-// 🔹 Modal for Add Role
-const AddRoleModal = ({ onClose, onSave }: { onClose: () => void; onSave: (role: any) => void }) => {
-  const [roleName, setRoleName] = useState('')
-  const [permissions, setPermissions] = useState<string[]>([])
+// 🔹 Add/Edit Role Modal (reused for both)
+const RoleModal = ({
+  onClose,
+  onSave,
+  initialData,
+}: {
+  onClose: () => void
+  onSave: (role: any) => void
+  initialData?: any
+}) => {
+  const [roleName, setRoleName] = useState(initialData?.roleName || initialData?.role || '')
+  const [permissions, setPermissions] = useState<string[]>(initialData?.permissions || [])
 
   const allPermissions = [
     'View Users',
@@ -49,7 +57,12 @@ const AddRoleModal = ({ onClose, onSave }: { onClose: () => void; onSave: (role:
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    onSave({ roleName, permissions })
+    onSave({
+      ...initialData,
+      roleName,
+      role: roleName,
+      permissions,
+    })
   }
 
   return (
@@ -63,7 +76,9 @@ const AddRoleModal = ({ onClose, onSave }: { onClose: () => void; onSave: (role:
       <div className='modal-dialog modal-dialog-centered'>
         <div className='modal-content p-4 rounded-3 shadow-sm'>
           <div className='modal-header border-0'>
-            <h5 className='modal-title fw-bold'>Add Role</h5>
+            <h5 className='modal-title fw-bold'>
+              {initialData ? 'Edit Role' : 'Add Role'}
+            </h5>
             <button type='button' className='btn-close' onClick={onClose}></button>
           </div>
 
@@ -83,7 +98,10 @@ const AddRoleModal = ({ onClose, onSave }: { onClose: () => void; onSave: (role:
 
               <div className='mb-3'>
                 <label className='form-label fw-semibold'>Permissions</label>
-                <div className='border rounded-3 p-3' style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                <div
+                  className='border rounded-3 p-3'
+                  style={{ maxHeight: '200px', overflowY: 'auto' }}
+                >
                   {allPermissions.map((perm) => (
                     <div key={perm} className='form-check mb-2'>
                       <input
@@ -107,7 +125,7 @@ const AddRoleModal = ({ onClose, onSave }: { onClose: () => void; onSave: (role:
                 Cancel
               </button>
               <button type='submit' className='btn btn-primary'>
-                Save Role
+                Save Changes
               </button>
             </div>
           </form>
@@ -119,21 +137,17 @@ const AddRoleModal = ({ onClose, onSave }: { onClose: () => void; onSave: (role:
 
 // 🔹 Main Roles List Wrapper
 const RolesListWrapper: React.FC = () => {
-  const rolesData = [
-    { id: 1, fullName: 'John Carter', role: 'Administrator', lastLogin: '2025-11-08', joinedDate: '2024-01-20' },
-    { id: 2, fullName: 'Sarah Johnson', role: 'Manager', lastLogin: '2025-11-06', joinedDate: '2024-03-15' },
-    { id: 3, fullName: 'Amit Verma', role: 'Editor', lastLogin: '2025-11-05', joinedDate: '2024-04-10' },
-    { id: 4, fullName: 'Lisa Wong', role: 'HR Executive', lastLogin: '2025-10-30', joinedDate: '2024-05-12' },
+  const initialRoles = [
     { id: 1, fullName: 'John Carter', role: 'Administrator', lastLogin: '2025-11-08', joinedDate: '2024-01-20' },
     { id: 2, fullName: 'Sarah Johnson', role: 'Manager', lastLogin: '2025-11-06', joinedDate: '2024-03-15' },
     { id: 3, fullName: 'Amit Verma', role: 'Editor', lastLogin: '2025-11-05', joinedDate: '2024-04-10' },
     { id: 4, fullName: 'Lisa Wong', role: 'HR Executive', lastLogin: '2025-10-30', joinedDate: '2024-05-12' },
   ]
-  
 
-  const [data, setData] = useState(rolesData)
+  const [data, setData] = useState(initialRoles)
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState<number>(1)
+  const [modalData, setModalData] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const pageSize = 5
 
@@ -151,12 +165,71 @@ const RolesListWrapper: React.FC = () => {
     [filteredData, currentPage]
   )
 
+  const handleAddRole = () => {
+    setModalData(null)
+    setIsModalOpen(true)
+  }
+
+  const handleEdit = (role: any) => {
+    setModalData(role)
+    setIsModalOpen(true)
+  }
+
+  const handleDelete = (role: any) => {
+    if (window.confirm(`Are you sure you want to delete ${role.role}?`)) {
+      setData((prev) => prev.filter((r) => r.id !== role.id))
+    }
+  }
+
+  const handleSave = (updatedRole: any) => {
+    if (updatedRole.id) {
+      // Editing existing role
+      setData((prev) =>
+        prev.map((r) => (r.id === updatedRole.id ? { ...r, ...updatedRole } : r))
+      )
+    } else {
+      // Adding new role
+      const newEntry = {
+        id: data.length + 1,
+        fullName: updatedRole.roleName,
+        role: updatedRole.roleName,
+        lastLogin: new Date().toISOString().split('T')[0],
+        joinedDate: new Date().toISOString().split('T')[0],
+      }
+      setData([...data, newEntry])
+    }
+    setIsModalOpen(false)
+  }
+
   const columns = useMemo<ColumnDef<any>[]>(
     () => [
       { header: 'Full Name', accessorKey: 'fullName' },
       { header: 'Role', accessorKey: 'role' },
       { header: 'Last Login', accessorKey: 'lastLogin' },
       { header: 'Joined Date', accessorKey: 'joinedDate' },
+      {
+        header: 'Actions',
+        id: 'actions',
+        cell: (info) => {
+          const role = info.row.original
+          return (
+            <div className='d-flex justify-content-end gap-2'>
+              <button
+                className='btn btn-sm btn-light-primary px-3'
+                onClick={() => handleEdit(role)}
+              >
+                <i className='bi bi-pencil-square'></i> Edit
+              </button>
+              <button
+                className='btn btn-sm btn-light-danger px-3'
+                onClick={() => handleDelete(role)}
+              >
+                <i className='bi bi-trash'></i> Delete
+              </button>
+            </div>
+          )
+        },
+      },
     ],
     []
   )
@@ -167,42 +240,14 @@ const RolesListWrapper: React.FC = () => {
     getCoreRowModel: getCoreRowModel(),
   })
 
-  const handleAddRole = (newRole: any) => {
-    const newEntry = {
-      id: data.length + 1,
-      fullName: newRole.roleName,
-      role: newRole.roleName,
-      lastLogin: new Date().toISOString().split('T')[0],
-      joinedDate: new Date().toISOString().split('T')[0],
-    }
-    setData([...data, newEntry])
-    setIsModalOpen(false)
-  }
-
   return (
     <div className='container-fluid mt-15' style={{ maxWidth: '95%' }}>
-      {/* Page Header */}
-      <div
-        className='d-flex align-items-center justify-content-start mb-5'
-        style={{
-          borderRadius: '8px',
-          padding: '10px 20px',
-          color: '#fff',
-        }}
-      >
-        <h1
-          className='fw-bold mb-0'
-          style={{
-            fontSize: '1.2rem',
-            letterSpacing: '0.3px',
-            color: '#fff',
-          }}
-        >
-          Roles-Management
+      <div className='d-flex align-items-center justify-content-start mb-5'>
+        <h1 className='fw-bold mb-0' style={{ fontSize: '1.2rem', letterSpacing: '0.3px', color: '#fff' }}>
+          Roles Management
         </h1>
       </div>
 
-      {/* Table Section */}
       <div
         className='py-5'
         style={{
@@ -216,7 +261,6 @@ const RolesListWrapper: React.FC = () => {
           <h4 className='fw-bold text-primary mb-0'>Roles List</h4>
 
           <div className='d-flex align-items-center gap-3'>
-            {/* 🔍 Search Bar */}
             <div
               className='d-flex align-items-center px-3 py-1 shadow-sm'
               style={{
@@ -236,8 +280,7 @@ const RolesListWrapper: React.FC = () => {
               />
             </div>
 
-            {/* ➕ Add Role Button */}
-            <button className='btn btn-primary fw-semibold' onClick={() => setIsModalOpen(true)}>
+            <button className='btn btn-primary fw-semibold' onClick={handleAddRole}>
               <i className='bi bi-plus-lg me-1'></i> Add Role
             </button>
           </div>
@@ -250,7 +293,10 @@ const RolesListWrapper: React.FC = () => {
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id} className='text-muted text-uppercase fs-7 border-bottom'>
                   {headerGroup.headers.map((header) => (
-                    <th key={header.id}>
+                    <th
+                      key={header.id}
+                      className={`${header.column.id === 'actions' ? 'text-end pe-3' : ''}`}
+                    >
                       {flexRender(header.column.columnDef.header, header.getContext())}
                     </th>
                   ))}
@@ -262,7 +308,10 @@ const RolesListWrapper: React.FC = () => {
                 table.getRowModel().rows.map((row) => (
                   <tr key={row.id}>
                     {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id}>
+                      <td
+                        key={cell.id}
+                        className={`${cell.column.id === 'actions' ? 'text-end pe-3' : ''}`}
+                      >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
                     ))}
@@ -299,11 +348,15 @@ const RolesListWrapper: React.FC = () => {
             Next
           </button>
         </div>
-
       </div>
 
-      {/* Add Role Modal */}
-      {isModalOpen && <AddRoleModal onClose={() => setIsModalOpen(false)} onSave={handleAddRole} />}
+      {isModalOpen && (
+        <RoleModal
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleSave}
+          initialData={modalData}
+        />
+      )}
     </div>
   )
 }

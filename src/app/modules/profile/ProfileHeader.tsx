@@ -36,20 +36,20 @@ const ProfileHeader: React.FC = () => {
                     </div>
 
                     <div className='d-flex flex-wrap fw-bold fs-6 mb-4 pe-2'>
-                      <a
+                      {/* <a
                         href='#'
                         className='d-flex align-items-center text-gray-500 text-hover-primary me-5 mb-2'
                       >
                         <KTIcon iconName='profile-circle' className='fs-4 me-1' />
                         Developer
-                      </a>
-                      <a
+                      </a> */}
+                      {/* <a
                         href='#'
                         className='d-flex align-items-center text-gray-500 text-hover-primary me-5 mb-2'
                       >
                         <KTIcon iconName='geolocation' className='fs-4 me-1' />
                         SF, Bay Area
-                      </a>
+                      </a> */}
                       <a
                         href='#'
                         className='d-flex align-items-center text-gray-500 text-hover-primary mb-2'
@@ -60,7 +60,7 @@ const ProfileHeader: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className='d-flex my-4'>
+                  {/* <div className='d-flex my-4'>
                     <a href='#' className='btn btn-sm btn-light me-2' id='kt_user_follow_button'>
                       <KTIcon iconName='check' className='fs-3 d-none' />
 
@@ -89,38 +89,38 @@ const ProfileHeader: React.FC = () => {
                       </button>
                       <Dropdown1 />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className='d-flex flex-wrap flex-stack'>
                   <div className='d-flex flex-column flex-grow-1 pe-8'>
                     <div className='d-flex flex-wrap'>
-                      <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
+                      {/* <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
                         <div className='d-flex align-items-center'>
                           <KTIcon iconName='arrow-up' className='fs-3 text-success me-2' />
                           <div className='fs-2 fw-bolder'>4500$</div>
                         </div>
 
                         <div className='fw-bold fs-6 text-gray-500'>Earnings</div>
-                      </div>
+                      </div> */}
 
-                      <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
+                      {/* <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
                         <div className='d-flex align-items-center'>
                           <KTIcon iconName='arrow-down' className='fs-3 text-danger me-2' />
                           <div className='fs-2 fw-bolder'>75</div>
                         </div>
 
                         <div className='fw-bold fs-6 text-gray-500'>Projects</div>
-                      </div>
+                      </div> */}
 
-                      <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
+                      {/* <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
                         <div className='d-flex align-items-center'>
                           <KTIcon iconName='arrow-up' className='fs-3 text-success me-2' />
                           <div className='fs-2 fw-bolder'>60%</div>
                         </div>
 
                         <div className='fw-bold fs-6 text-gray-500'>Success Rate</div>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
 
@@ -155,7 +155,7 @@ const ProfileHeader: React.FC = () => {
                   </Link>
                 </li>
                 <li className='nav-item'>
-                  <Link
+                  {/* <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
                       (location.pathname === '/crafted/pages/profile/projects' && 'active')
@@ -163,10 +163,10 @@ const ProfileHeader: React.FC = () => {
                     to='/crafted/pages/profile/projects'
                   >
                     Projects
-                  </Link>
+                  </Link> */}
                 </li>
                 <li className='nav-item'>
-                  <Link
+                  {/* <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
                       (location.pathname === '/crafted/pages/profile/campaigns' && 'active')
@@ -174,10 +174,10 @@ const ProfileHeader: React.FC = () => {
                     to='/crafted/pages/profile/campaigns'
                   >
                     Campaigns
-                  </Link>
+                  </Link> */}
                 </li>
                 <li className='nav-item'>
-                  <Link
+                  {/* <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
                       (location.pathname === '/crafted/pages/profile/documents' && 'active')
@@ -185,10 +185,10 @@ const ProfileHeader: React.FC = () => {
                     to='/crafted/pages/profile/documents'
                   >
                     Documents
-                  </Link>
+                  </Link> */}
                 </li>
                 <li className='nav-item'>
-                  <Link
+                  {/* <Link
                     className={
                       `nav-link text-active-primary me-6 ` +
                       (location.pathname === '/crafted/pages/profile/connections' && 'active')
@@ -196,7 +196,7 @@ const ProfileHeader: React.FC = () => {
                     to='/crafted/pages/profile/connections'
                   >
                     Connections
-                  </Link>
+                  </Link> */}
                 </li>
               </ul>
             </div>

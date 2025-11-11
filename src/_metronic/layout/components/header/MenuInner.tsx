@@ -117,7 +117,7 @@ export function MenuInner() {
         {/* <MenuItem icon='shield-tick' to='/apps/user-management/users' title='Users list' />
       </MenuInnerWithSub> */}
 
-      <MenuInnerWithSub title='Roles' to='/apps/roles-management/roles' menuPlacement='bottom-start'>
+      {/* <MenuInnerWithSub title='Roles' to='/apps/roles-management/roles' menuPlacement='bottom-start'> */}
         {/* PAGES */}
         {/* <MenuInnerWithSub
           title='Create roles'
@@ -129,7 +129,7 @@ export function MenuInner() {
           {/* <MenuItem to='/apps/chat/private-chat' title='Private Chat' hasBullet={true} />
           <MenuItem to='/apps/chat/group-chat' title='Group Chart' hasBullet={true} />
           <MenuItem to='/apps/chat/drawer-chat' title='Drawer Chart' hasBullet={true} /> */}
-        </MenuInnerWithSub>
+        {/* </MenuInnerWithSub> */}
         {/* <MenuItem icon='shield-tick' to='/apps/roles-management/roles' title='Roles list' />
       </MenuInnerWithSub> */}
 

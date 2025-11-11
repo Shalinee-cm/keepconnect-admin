@@ -25,7 +25,7 @@ const Toolbar1 = () => {
             {/* begin::Wrapper */}
             <div className='me-4'>
               {/* begin::Menu */}
-              <a
+              {/* <a
                 href='#'
                 className='btn btn-custom btn-active-white btn-flex btn-color-white btn-active-color-white'
                 data-kt-menu-trigger='click'
@@ -34,7 +34,7 @@ const Toolbar1 = () => {
               >
                 <KTIcon iconName='filter' className='fs-5 me-1' />
                 Filter
-              </a>
+              </a> */}
 
               {/* end::Menu */}
             </div>
@@ -42,14 +42,14 @@ const Toolbar1 = () => {
 
             {/* begin::Button */}
 
-            <a
+            {/* <a
               className='btn bg-body btn-active-color-primary'
               id='kt_toolbar_primary_button'
               data-bs-theme='light'
               onClick={() => setShowCreateAppModal(true)}
             >
               Create
-            </a>
+            </a> */}
             {/* end::Button */}
           </div>
           {/* end::Actions */}

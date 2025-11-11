@@ -30,7 +30,7 @@ const AsideDefault: FC = () => {
       <div className='aside-footer flex-column-auto pt-5 pb-7 px-5' id='kt_aside_footer'>
         <a
           target='_blank'
-          className='btn btn-custom btn-primary w-100'
+          className='btn btn- btn-primary w-100'
           href={import.meta.env.VITE_APP_PREVIEW_DOCS_URL}
           data-bs-toggle='tooltip'
           data-bs-trigger='hover'

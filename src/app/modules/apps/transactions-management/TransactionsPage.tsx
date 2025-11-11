@@ -58,7 +58,7 @@ const TransactionsPage: React.FC = () => {
         header: 'Created Date',
         accessorKey: 'createdAt',
         cell: (info) => (
-          <span className='text-muted'>
+          <span className='text-dark'>
             {info.getValue() as string}
           </span>
         ),
@@ -115,7 +115,7 @@ const TransactionsPage: React.FC = () => {
             color: '#fff',
           }}
         >
-          Transaction-Management
+          Transaction Management
         </h1>
       </div>
 

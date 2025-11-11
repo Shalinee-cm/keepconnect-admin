@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
+import clsx from 'clsx'
 
 // 🔹 Validation Schema
 const roleSchema = Yup.object().shape({
@@ -13,11 +14,14 @@ const roleSchema = Yup.object().shape({
     .required('Select at least one permission'),
 })
 
+// 🔹 Role type
 type Role = {
+  id?: number
   name: string
   permissions: string[]
 }
 
+// 🔹 Props
 type Props = {
   role?: Role
   onClose: () => void
@@ -64,63 +68,65 @@ const RoleEditModalForm: FC<Props> = ({ role, onClose, onSave }) => {
 
   return (
     <div
-      className='modal fade show'
+      className="modal fade show"
       style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.4)' }}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className='modal-dialog modal-dialog-centered'>
-        <div className='modal-content p-4 rounded-3 shadow-sm'>
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content p-4 rounded-3 shadow-sm">
           {/* Header */}
-          <div className='modal-header border-0'>
-            <h5 className='modal-title fw-bold'>Role Information</h5>
-            <button type='button' className='btn-close' onClick={onClose}></button>
+          <div className="modal-header border-0">
+            <h5 className="modal-title fw-bold">
+              {role ? 'Edit Role' : 'Create Role'}
+            </h5>
+            <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
 
           {/* Form */}
           <form onSubmit={formik.handleSubmit} noValidate>
-            <div className='modal-body'>
+            <div className="modal-body">
               {/* Role Name */}
-              <div className='mb-3'>
-                <label className='form-label fw-semibold'>Role Name</label>
+              <div className="mb-3">
+                <label className="form-label fw-semibold">Role Name</label>
                 <input
-                  type='text'
-                  className={`form-control ${
-                    formik.touched.name && formik.errors.name
-                      ? 'is-invalid'
-                      : formik.touched.name
-                      ? 'is-valid'
-                      : ''
-                  }`}
-                  placeholder='Enter role name'
+                  type="text"
+                  className={clsx('form-control', {
+                    'is-invalid': formik.touched.name && formik.errors.name,
+                    'is-valid': formik.touched.name && !formik.errors.name,
+                  })}
+                  placeholder="Enter role name"
                   {...formik.getFieldProps('name')}
                   disabled={isSubmitting}
                 />
                 {formik.touched.name && formik.errors.name && (
-                  <div className='invalid-feedback'>{formik.errors.name}</div>
+                  <div className="invalid-feedback">{formik.errors.name}</div>
                 )}
               </div>
 
               {/* Permissions */}
-              <div className='mb-3'>
-                <label className='form-label fw-semibold'>Permissions</label>
+              <div className="mb-3">
+                <label className="form-label fw-semibold">Permissions</label>
                 <div
-                  className='border rounded-3 p-3'
+                  className={clsx('border rounded-3 p-3', {
+                    'border-danger': formik.touched.permissions && formik.errors.permissions,
+                  })}
                   style={{ maxHeight: '200px', overflowY: 'auto' }}
                 >
                   {allPermissions.map((perm) => (
                     <div
                       key={perm}
-                      className='form-check form-check-sm form-check-custom form-check-solid mb-2'
+                      className="form-check form-check-sm form-check-custom form-check-solid mb-2"
                     >
                       <input
-                        className='form-check-input'
-                        type='checkbox'
+                        className="form-check-input"
+                        type="checkbox"
                         id={perm}
                         checked={formik.values.permissions.includes(perm)}
                         onChange={() => handlePermissionChange(perm)}
                         disabled={isSubmitting}
                       />
                       <label
-                        className='form-check-label text-gray-700'
+                        className="form-check-label text-gray-700"
                         htmlFor={perm}
                       >
                         {perm}
@@ -129,7 +135,7 @@ const RoleEditModalForm: FC<Props> = ({ role, onClose, onSave }) => {
                   ))}
                 </div>
                 {formik.touched.permissions && formik.errors.permissions && (
-                  <div className='text-danger mt-1 small'>
+                  <div className="invalid-feedback d-block mt-1">
                     {formik.errors.permissions}
                   </div>
                 )}
@@ -137,18 +143,18 @@ const RoleEditModalForm: FC<Props> = ({ role, onClose, onSave }) => {
             </div>
 
             {/* Footer */}
-            <div className='modal-footer border-0 d-flex justify-content-center'>
+            <div className="modal-footer border-0 d-flex justify-content-center">
               <button
-                type='button'
-                className='btn btn-light'
+                type="button"
+                className="btn btn-light"
                 onClick={onClose}
                 disabled={isSubmitting}
               >
                 Cancel
               </button>
               <button
-                type='submit'
-                className='btn btn-primary'
+                type="submit"
+                className="btn btn-primary"
                 disabled={isSubmitting || !formik.isValid}
               >
                 {isSubmitting ? 'Saving...' : 'Save'}

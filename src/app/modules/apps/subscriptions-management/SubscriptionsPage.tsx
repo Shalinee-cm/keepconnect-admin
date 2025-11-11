@@ -69,7 +69,7 @@ export const SubscriptionsPage: React.FC = () => {
       {
         header: 'Slug',
         accessorKey: 'slug',
-        cell: (info) => <span className='text-muted'>{info.getValue() as string}</span>,
+        cell: (info) => <span className='text-dark'>{info.getValue() as string}</span>,
       },
       {
         header: 'Actions',

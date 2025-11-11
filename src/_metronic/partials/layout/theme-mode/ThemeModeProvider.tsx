@@ -20,7 +20,7 @@ type ThemeModeContextType = {
 const themeModeSwitchHelper = (_mode: ThemeModeType) => {
   // change background image url
   const mode = _mode !== 'system' ? _mode : systemMode
-  const imageUrl = 'media/patterns/header-bg' + (mode === 'light' ? '.jpg' : '-dark.jpg')
+  const imageUrl = 'media/patterns/header-bg' + (mode === 'light' ? '.svg' : '-dark.svg')
   document.body.style.backgroundImage = `url("${toAbsoluteUrl(imageUrl)}")`
 }
 
@@ -92,7 +92,7 @@ const ThemeModeProvider = ({children}: {children: ReactNode}) => {
   }, [])
 
   return (
-    <ThemeModeContext.Provider value={{mode, menuMode, updateMode, updateMenuMode}}>
+    <ThemeModeContext.Provider value={{mode, menuMode, updateMode, updateMenuMode}} >
       {children}
     </ThemeModeContext.Provider>
   )

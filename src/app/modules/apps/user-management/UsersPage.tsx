@@ -17,100 +17,64 @@ const usersBreadcrumbs: Array<PageLink> = [
     isSeparator: false,
     isActive: false,
   },
-  {
-    title: '',
-    path: '',
-    isSeparator: true,
-    isActive: false,
-  },
+  { title: '', path: '', isSeparator: true, isActive: false },
 ]
 
-// 🔹 Type definition
-type User = {
-  id: number
-  fullName: string
-  email: string
-  role: string
-}
-
+// 🔹 Users List Wrapper
 const UsersListWrapper: React.FC = () => {
-  const usersData: User[] = [
-    { id: 1, fullName: 'John Carter', email: 'john.carter@example.com', role: 'Administrator' },
-    { id: 2, fullName: 'Sarah Johnson', email: 'sarah.j@example.com', role: 'Manager' },
-    { id: 3, fullName: 'Amit Verma', email: 'amit.verma@example.com', role: 'Editor' },
-    { id: 4, fullName: 'Lisa Wong', email: 'lisa.wong@example.com', role: 'HR Executive' },
-    { id: 5, fullName: 'Michael Smith', email: 'm.smith@example.com', role: 'Finance' },
-    { id: 6, fullName: 'Priya Sharma', email: 'priya.sharma@example.com', role: 'Viewer' },
-    { id: 7, fullName: 'David Green', email: 'david.green@example.com', role: 'Support' },
-    { id: 8, fullName: 'Emily Brown', email: 'emily.brown@example.com', role: 'Developer' },
-    { id: 9, fullName: 'Rohit Kumar', email: 'rohit.kumar@example.com', role: 'Operations' },
-    { id: 10, fullName: 'Anna Lee', email: 'anna.lee@example.com', role: 'Intern' },
+  const usersData = [
+    { id: 1, name: 'John Doe', email: 'john@example.com', position: 'Acme Corp', phone: '9876543210' },
+    { id: 2, name: 'Sarah Johnson', email: 'sarah@example.com', position: 'TechSoft', phone: '7896541230' },
+    { id: 3, name: 'Amit Verma', email: 'amit@example.com', position: 'Verma Traders', phone: '9988776655' },
   ]
 
+  const [data, setData] = useState(usersData)
+  const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState<number>(1)
-  const [searchTerm, setSearchTerm] = useState<string>('')
-  const [showModal, setShowModal] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedUser, setSelectedUser] = useState<any | null>(null)
   const pageSize = 5
 
-  // 🔹 Filtered data
-  const filteredData = useMemo(() => {
-    return usersData.filter(
-      (user) =>
-        user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.role.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  }, [usersData, searchTerm])
+  const filteredData = useMemo(
+    () =>
+      data.filter(
+        (user) =>
+          user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.phone.toLowerCase().includes(searchTerm.toLowerCase())
+      ),
+    [data, searchTerm]
+  )
 
   const totalPages = Math.ceil(filteredData.length / pageSize)
-
   const paginatedData = useMemo(
     () => filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize),
     [filteredData, currentPage]
   )
 
-  // 🔹 Table Columns
-  const columns = useMemo<ColumnDef<User>[]>(
+  const columns = useMemo<ColumnDef<any>[]>(
     () => [
+      { header: 'Full Name', accessorKey: 'name' },
+      { header: 'Business Name', accessorKey: 'position' },
+      { header: 'Phone Number', accessorKey: 'phone' },
+      { header: 'Email', accessorKey: 'email' },
       {
-        header: 'Full Name',
-        accessorKey: 'fullName',
-        cell: (info) => (
-          <span className='fw-semibold text-dark'>
-            {info.getValue() as string}
-          </span>
-        ),
-      },
-      {
-        header: 'Email',
-        accessorKey: 'email',
-        cell: (info) => (
-          <span className='text-muted'>{info.getValue() as string}</span>
-        ),
-      },
-      {
-        header: 'Role',
-        accessorKey: 'role',
-        cell: (info) => (
-          <span className='text-muted'>{info.getValue() as string}</span>
-        ),
-      },
-      {
-        header: () => <div className='text-end'>Actions</div>, // ✅ aligned header
+        header: 'Actions',
         id: 'actions',
         cell: (info) => {
           const user = info.row.original
           return (
-            <div className='text-end'>
+            <div className='d-flex justify-content-end gap-2'>
               <button
-                className='btn btn-sm btn-light-primary me-2'
-                onClick={() => alert(`Edit user: ${user.fullName}`)}
+                className='btn btn-sm btn-light-primary px-3'
+                onClick={() => handleEdit(user)}
               >
                 <i className='bi bi-pencil-square'></i> Edit
               </button>
               <button
-                className='btn btn-sm btn-light-danger'
-                onClick={() => alert(`Delete user: ${user.fullName}`)}
+                className='btn btn-sm btn-light-danger px-3'
+                onClick={() => handleDelete(user)}
               >
                 <i className='bi bi-trash'></i> Delete
               </button>
@@ -128,127 +92,117 @@ const UsersListWrapper: React.FC = () => {
     getCoreRowModel: getCoreRowModel(),
   })
 
-  // 🔹 Add User (opens modal)
-  const handleAddUser = () => {
-    setShowModal(true)
+  const handleAddUser = (user: any) => {
+    if (selectedUser) {
+      setData((prev) => prev.map((u) => (u.id === selectedUser.id ? { ...u, ...user } : u)))
+    } else {
+      const newEntry = { id: Date.now(), ...user }
+      setData([...data, newEntry])
+    }
+    setIsModalOpen(false)
+    setSelectedUser(null)
+  }
+
+  const handleCancel = () => {
+    setIsModalOpen(false)
+    setSelectedUser(null)
+  }
+
+  const handleEdit = (user: any) => {
+    setSelectedUser(user)
+    setIsModalOpen(true)
+  }
+
+  const handleDelete = (user: any) => {
+    if (window.confirm(`Are you sure you want to delete ${user.name}?`)) {
+      setData((prev) => prev.filter((u) => u.id !== user.id))
+    }
   }
 
   return (
-    <div className='container-fluid mt-15' style={{ maxWidth: '95%' }}>
-      {/* 🔹 Page Header */}
-      <div
-        className='d-flex align-items-center justify-content-start mb-5'
-        style={{
-          borderRadius: '8px',
-          padding: '10px 20px',
-          color: '#fff',
-        }}
-      >
-        <h1
-          className='fw-bold mb-0'
-          style={{
-            fontSize: '1.2rem',
-            letterSpacing: '0.3px',
-            color: '#fff',
-          }}
-        >
-          Users-Management
+    <div className='container-fluid mt-20' style={{ maxWidth: '95%' }}>
+      <div className='d-flex align-items-center justify-content-start mb-10'>
+        <h1 className='fw-bold mb-0' style={{ fontSize: '1.2rem', color: '#fff' }}>
+          User Management
         </h1>
       </div>
 
-      {/* 🔹 Table Card */}
       <div
-        className='py-5'
+        className='py-5 '
         style={{
           backgroundColor: '#fff',
           borderRadius: '12px',
           boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-          padding: '60px',
+          padding: '40px',
         }}
       >
-        {/* Header Row with Search + Add Button */}
         <div className='d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3'>
-          <h4 className='fw-bold text-primary mb-0'>User List</h4>
+          <h4 className='fw-bold text-primary mb-0'>Users List</h4>
 
           <div className='d-flex align-items-center gap-3'>
-            {/* 🔍 Oval Search Bar */}
             <div
-            className='d-flex align-items-center px-3 py-1 shadow-sm'
-            style={{
-              backgroundColor: '#f5f8fa',
-              borderRadius: '5px',
-              border: '1px solid #e1e3ea',
-              width: '180px',
-              transition: 'all 0.3s ease',
-            }}
-          >
+              className='d-flex align-items-center px-3 py-1 shadow-sm'
+              style={{
+                backgroundColor: '#f5f8fa',
+                borderRadius: '5px',
+                border: '1px solid #e1e3ea',
+                width: '180px',
+              }}
+            >
               <i className='bi bi-search text-muted me-2'></i>
               <input
                 type='text'
                 className='form-control border-0 bg-transparent'
                 placeholder='Search user...'
-                style={{
-                  outline: 'none',
-                  boxShadow: 'none',
-                  fontSize: '0.9rem',
-                }}
                 value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value)
-                  setCurrentPage(1)
-                }}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
 
-            {/* ➕ Add User Button */}
-            <button className='btn btn-primary fw-semibold' onClick={handleAddUser}>
-              <i className='bi bi-person-plus-fill me-2'></i> Add User
+            <button
+              className='btn btn-primary fw-semibold'
+              onClick={() => {
+                setSelectedUser(null)
+                setIsModalOpen(true)
+              }}
+            >
+              <i className='bi bi-plus-lg me-1'></i> Add User
             </button>
           </div>
         </div>
 
-        {/* Table */}
-        <div className='table-responsive'>
+        {/* ✅ Table */}
+        <div className='table-responsive ' >
           <table className='table table-hover align-middle'>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
-                <tr
-                  key={headerGroup.id}
-                  className='text-muted text-uppercase fs-7 border-bottom'
-                >
+                <tr key={headerGroup.id} className='text-muted text-uppercase fs-7 border-bottom'>
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className={`py-3 ${
-                        header.column.id === 'actions' ? 'text-end' : ''
+                      className={`${
+                        header.column.id === 'actions' ? 'text-end pe-3' : ''
                       }`}
                     >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                      {flexRender(header.column.columnDef.header, header.getContext())}
                     </th>
                   ))}
                 </tr>
               ))}
             </thead>
+
             <tbody>
               {table.getRowModel().rows.length > 0 ? (
                 table.getRowModel().rows.map((row) => (
-                  <tr key={row.id} className='fw-semibold'>
+                  <tr key={row.id}>
                     {row.getVisibleCells().map((cell) => (
                       <td
                         key={cell.id}
-                        className={
-                          cell.column.id === 'actions' ? 'text-end' : ''
-                        }
+                        className={`${
+                          cell.column.id === 'actions' ? 'text-end pe-3' : ''
+                        }`}
                       >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
                     ))}
                   </tr>
@@ -265,52 +219,39 @@ const UsersListWrapper: React.FC = () => {
         </div>
 
         {/* Pagination */}
-        <div className='d-flex justify-content-between align-items-center mt-4'>
-          <span className='text-muted'>
-            Page {currentPage} of {totalPages || 1}
+        <div className='d-flex justify-content-end align-items-center mt-4 gap-2'>
+          <span className='text-muted me-auto'>
+            Page {currentPage} of {totalPages}
           </span>
-          <div>
-            <button
-              className='btn btn-sm btn-light me-2'
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-            >
-              Previous
-            </button>
-            <button
-              className='btn btn-sm btn-primary'
-              disabled={currentPage === totalPages || totalPages === 0}
-              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-            >
-              Next
-            </button>
-          </div>
+          <button
+            className='btn btn-sm btn-light'
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+          >
+            Previous
+          </button>
+          <button
+            className='btn btn-sm btn-primary'
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+          >
+            Next
+          </button>
         </div>
       </div>
 
-      {/* ✅ Modal inserted directly here */}
-      {showModal && (
+      {/* ✅ Imported Modal */}
+      {isModalOpen && (
         <div
-          className='modal fade show d-block'
-          tabIndex={-1}
-          role='dialog'
-          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+          className='modal fade show'
+          style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+          onClick={(e) => e.target === e.currentTarget && handleCancel()}
         >
-          <div className='modal-dialog modal-dialog-centered' role='document'>
-            <div className='modal-content p-5'>
-              <div className='modal-header border-0'>
-                <h5 className='modal-title'>Add New User</h5>
-                <button
-                  type='button'
-                  className='btn-close'
-                  onClick={() => setShowModal(false)}
-                ></button>
-              </div>
-              <div className='modal-body'>
-                <UserEditModalForm user={{} as any} isUserLoading={false} />
-              </div>
-            </div>
-          </div>
+          <UserEditModalForm
+            user={selectedUser || undefined}
+            onCancel={handleCancel}
+            onSubmit={handleAddUser}
+          />
         </div>
       )}
     </div>
@@ -318,23 +259,21 @@ const UsersListWrapper: React.FC = () => {
 }
 
 // 🔹 Routes Wrapper
-const UsersPage = () => {
-  return (
-    <Routes>
-      <Route element={<Outlet />}>
-        <Route
-          path='users'
-          element={
-            <>
-              <PageTitle breadcrumbs={usersBreadcrumbs}>Users Management</PageTitle>
-              <UsersListWrapper />
-            </>
-          }
-        />
-      </Route>
-      <Route index element={<Navigate to='/apps/user-management/users' />} />
-    </Routes>
-  )
-}
+const UsersPage = () => (
+  <Routes>
+    <Route element={<Outlet />}>
+      <Route
+        path='users'
+        element={
+          <>
+            <PageTitle breadcrumbs={usersBreadcrumbs}>User Management</PageTitle>
+            <UsersListWrapper />
+          </>
+        }
+      />
+    </Route>
+    <Route index element={<Navigate to='/apps/user-management/users' />} />
+  </Routes>
+)
 
 export default UsersPage

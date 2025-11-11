@@ -15,10 +15,10 @@ const AccountHeader: React.FC = () => {
       <Toolbar />
       <Content>
         <div className='card mb-5 mb-xl-10'>
-          <div className='card-body pt-9 pb-0'>
+          <div className='card-body pt-9 pb-0 '>
             <div className='d-flex flex-wrap flex-sm-nowrap mb-3'>
-              <div className='me-7 mb-4'>
-                <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative'>
+              <div className='me-7 mb-4 '>
+                <div className='symbol symbol-100px symbol-lg-160px symbol-fixed position-relative '>
                   <img src={toAbsoluteUrl('/media/avatars/300-1.jpg')} alt='Metronic' />
                   <div className='position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px'></div>
                 </div>
@@ -34,31 +34,31 @@ const AccountHeader: React.FC = () => {
                       <a href='#'>
                         <KTIcon iconName='verify' className='fs-1 text-primary' />
                       </a>
-                      <a
+                      {/* <a
                         href='#'
                         className='btn btn-sm btn-light-success fw-bolder ms-2 fs-8 py-1 px-3'
                         data-bs-toggle='modal'
                         data-bs-target='#kt_modal_upgrade_plan'
                       >
                         Upgrade to Pro
-                      </a>
+                      </a> */}
                     </div>
 
                     <div className='d-flex flex-wrap fw-bold fs-6 mb-4 pe-2'>
-                      <a
+                      {/* <a
                         href='#'
                         className='d-flex align-items-center text-gray-500 text-hover-primary me-5 mb-2'
                       >
                         <KTIcon iconName='profile-circle' className='fs-4 me-1' />
                         Developer
-                      </a>
-                      <a
+                      </a> */}
+                      {/* <a
                         href='#'
                         className='d-flex align-items-center text-gray-500 text-hover-primary me-5 mb-2'
                       >
                         <KTIcon iconName='geolocation' className='fs-4 me-1' />
                         SF, Bay Area
-                      </a>
+                      </a> */}
                       <a
                         href='#'
                         className='d-flex align-items-center text-gray-500 text-hover-primary mb-2'
@@ -69,7 +69,7 @@ const AccountHeader: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className='d-flex my-4'>
+                  {/* <div className='d-flex my-4'>
                     <a href='#' className='btn btn-sm btn-light me-2' id='kt_user_follow_button'>
                       <KTIcon iconName='check' className='fs-3 d-none' />
 
@@ -78,7 +78,7 @@ const AccountHeader: React.FC = () => {
                         Please wait...
                         <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
                       </span>
-                    </a>
+                    </a> 
                     <a
                       href='#'
                       className='btn btn-sm btn-primary me-3'
@@ -98,42 +98,42 @@ const AccountHeader: React.FC = () => {
                       </button>
                       <Dropdown1 />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className='d-flex flex-wrap flex-stack'>
                   <div className='d-flex flex-column flex-grow-1 pe-8'>
                     <div className='d-flex flex-wrap'>
-                      <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
+                      {/* <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
                         <div className='d-flex align-items-center'>
                           <KTIcon iconName='arrow-up' className='fs-3 text-success me-2' />
                           <div className='fs-2 fw-bolder'>4500$</div>
                         </div>
 
                         <div className='fw-bold fs-6 text-gray-500'>Earnings</div>
-                      </div>
+                      </div> */}
 
-                      <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
+                      {/* <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
                         <div className='d-flex align-items-center'>
                           <KTIcon iconName='arrow-down' className='fs-3 text-danger me-2' />
                           <div className='fs-2 fw-bolder'>75</div>
                         </div>
 
                         <div className='fw-bold fs-6 text-gray-500'>Projects</div>
-                      </div>
+                      </div> */}
 
-                      <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
+                      {/* <div className='border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3'>
                         <div className='d-flex align-items-center'>
                           <KTIcon iconName='arrow-up' className='fs-3 text-success me-2' />
                           <div className='fs-2 fw-bolder'>60%</div>
                         </div>
 
                         <div className='fw-bold fs-6 text-gray-500'>Success Rate</div>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
 
-                  <div className='d-flex align-items-center w-200px w-sm-300px flex-column mt-3'>
+                  {/* <div className='d-flex align-items-center w-200px w-sm-300px flex-column mt-3'>
                     <div className='d-flex justify-content-between w-100 mt-auto mb-2'>
                       <span className='fw-bold fs-6 text-gray-500'>Profile Compleation</span>
                       <span className='fw-bolder fs-6'>50%</span>
@@ -145,7 +145,7 @@ const AccountHeader: React.FC = () => {
                         style={{width: '50%'}}
                       ></div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

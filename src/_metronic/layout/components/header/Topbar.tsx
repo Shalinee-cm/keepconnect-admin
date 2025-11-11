@@ -92,9 +92,9 @@ const Topbar: FC = () => {
 
         
         {/* Search */}
-        <div className={clsx('d-flex align-items-stretch', toolbarButtonMarginClass)}>
+        {/* <div className={clsx('d-flex align-items-stretch', toolbarButtonMarginClass)}>
           <Search />
-        </div>
+        </div> */}
         
         {/* begin::Theme mode */}
         <div className={clsx('d-flex align-items-center', toolbarButtonMarginClass)}>
