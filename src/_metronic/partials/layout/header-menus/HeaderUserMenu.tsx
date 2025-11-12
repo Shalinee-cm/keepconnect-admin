@@ -1,12 +1,12 @@
 
-import {FC} from 'react'
-import {Link} from 'react-router-dom'
-import {useAuth} from '../../../../app/modules/auth'
-import {Languages} from './Languages'
-import {toAbsoluteUrl} from '../../../helpers'
+import { FC } from 'react'
+import { Link } from 'react-router-dom'
+import { useAuth } from '../../../../app/modules/auth'
+import { Languages } from './Languages'
+import { toAbsoluteUrl } from '../../../helpers'
 
 const HeaderUserMenu: FC = () => {
-  const {currentUser, logout} = useAuth()
+  const { currentUser, logout } = useAuth()
   return (
     <div
       className='menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg menu-state-primary fw-semibold py-4 fs-6 w-275px'
@@ -15,8 +15,13 @@ const HeaderUserMenu: FC = () => {
       <div className='menu-item px-3'>
         <div className='menu-content d-flex align-items-center px-3'>
           <div className='symbol symbol-50px me-5'>
-            <img alt='Logo' src={toAbsoluteUrl('media/avatars/300-2.jpg')} />
+            <img
+              alt='Logo'
+              src={toAbsoluteUrl('media/avatars/300-2.jpg')}
+              className='w-[50px] h-[50px] rounded-circle object-cover'
+            />
           </div>
+
 
           <div className='d-flex flex-column'>
             <div className='fw-bold text-gray-800 d-flex align-items-center fs-5'>
@@ -132,4 +137,4 @@ const HeaderUserMenu: FC = () => {
   )
 }
 
-export {HeaderUserMenu}
+export { HeaderUserMenu }

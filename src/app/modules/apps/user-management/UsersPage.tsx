@@ -24,10 +24,22 @@ const usersBreadcrumbs: Array<PageLink> = [
 const UsersListWrapper: React.FC = () => {
   const usersData = [
     { id: 1, name: 'John Doe', email: 'john@example.com', position: 'Acme Corp', phone: '9876543210' },
-    { id: 2, name: 'Sarah Johnson', email: 'sarah@example.com', position: 'TechSoft', phone: '7896541230' },
-    { id: 3, name: 'Amit Verma', email: 'amit@example.com', position: 'Verma Traders', phone: '9988776655' },
+  { id: 2, name: 'Sarah Johnson', email: 'sarah@example.com', position: 'TechSoft', phone: '7896541230' },
+  { id: 3, name: 'Amit Verma', email: 'amit@example.com', position: 'Verma Traders', phone: '9988776655' },
+  { id: 4, name: 'Priya Sharma', email: 'priya.sharma@innovex.in', position: 'Innovex Solutions', phone: '9823456712' },
+  { id: 5, name: 'Michael Smith', email: 'michael@alphatech.com', position: 'AlphaTech', phone: '9123456789' },
+  { id: 6, name: 'Ravi Patel', email: 'ravi.patel@globex.com', position: 'Globex Corporation', phone: '9785643210' },
+  { id: 7, name: 'Emily Davis', email: 'emily.davis@brightlabs.com', position: 'Bright Labs', phone: '7890654321' },
+  { id: 8, name: 'Ananya Gupta', email: 'ananya@nextgen.io', position: 'NextGen Innovations', phone: '9912345678' },
+  { id: 9, name: 'Daniel Wilson', email: 'daniel@softlink.com', position: 'SoftLink Systems', phone: '8899776655' },
+  { id: 10, name: 'Neha Kapoor', email: 'neha.kapoor@bluewave.co', position: 'BlueWave Technologies', phone: '9812365470' },
+  { id: 11, name: 'Carlos Hernandez', email: 'carlos@microzone.com', position: 'Microzone', phone: '9998887770' },
+  { id: 12, name: 'Meera Nair', email: 'meera.nair@infotech.in', position: 'InfoTech India', phone: '9845123678' },
+  { id: 13, name: 'David Brown', email: 'david@northstar.com', position: 'NorthStar Solutions', phone: '9745612309' },
+  { id: 14, name: 'Sanya Singh', email: 'sanya@quantumsoft.io', position: 'QuantumSoft', phone: '9764312580' },
+  { id: 15, name: 'Olivia Miller', email: 'olivia.miller@novanet.com', position: 'NovaNet', phone: '9632147850' },
   ]
-
+  
   const [data, setData] = useState(usersData)
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState<number>(1)
@@ -138,10 +150,12 @@ const UsersListWrapper: React.FC = () => {
       >
         <div className='d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3'>
           <h4 className='fw-bold text-primary mb-0'>Users List</h4>
+              
+          
 
           <div className='d-flex align-items-center gap-3'>
             <div
-              className='d-flex align-items-center px-3 py-1 shadow-sm'
+              className='d-flex align-items-center px-5 py-0 shadow-sm'
               style={{
                 backgroundColor: '#f5f8fa',
                 borderRadius: '5px',
