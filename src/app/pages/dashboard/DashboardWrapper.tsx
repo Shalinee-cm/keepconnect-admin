@@ -85,7 +85,7 @@ const DashboardPage = () => (
             className='card-xl-stretch mb-xl-8'
             chartColor='danger'
             chartHeight='200px'
-            strokeColor='#cb1e46'
+            strokeColor='#d24444ff'
           />
         </div>
         <div className='col-xxl-4'>

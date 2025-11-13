@@ -9,30 +9,34 @@ import {
 type Transaction = {
   id: number
   transactionName: string
-  createdAt: string
+  user_id: number
+  date: string
+  amount: number
+  status: 'Credited' | 'Debited'
 }
 
 const TransactionsPage: React.FC = () => {
-  const transactionsData: Transaction[] = [
-    { id: 1, transactionName: 'Payment - Invoice #1001', createdAt: '2025-09-12' },
-    { id: 2, transactionName: 'Refund - Invoice #1002', createdAt: '2025-10-01' },
-    { id: 3, transactionName: 'Payment - Subscription', createdAt: '2025-10-15' },
-    { id: 4, transactionName: 'Adjustment - Credit', createdAt: '2025-11-02' },
-    { id: 5, transactionName: 'Payment - Order #2023', createdAt: '2025-11-04' },
-    { id: 6, transactionName: 'Refund - Order #2022', createdAt: '2025-09-29' },
-    { id: 7, transactionName: 'Payment - Renewal', createdAt: '2025-10-10' },
-    { id: 8, transactionName: 'Chargeback', createdAt: '2025-08-22' },
-    { id: 9, transactionName: 'Payment - Invoice #1010', createdAt: '2025-09-05' },
-    { id: 10, transactionName: 'Refund - Invoice #1011', createdAt: '2025-11-06' },
-  ]
+  const [transactionsData, setTransactionsData] = useState<Transaction[]>([
+    { id: 1, transactionName: 'Invoice #1001', user_id: 101, date: '2025-09-12', amount: 250, status: 'Credited' },
+    { id: 2, transactionName: 'Invoice #1002', user_id: 102, date: '2025-10-01', amount: 120, status: 'Debited' },
+    { id: 3, transactionName: 'Subscription Payment', user_id: 103, date: '2025-10-15', amount: 499, status: 'Credited' },
+    { id: 4, transactionName: 'Credit Adjustment', user_id: 104, date: '2025-11-02', amount: 75, status: 'Credited' },
+    { id: 5, transactionName: 'Order #2023', user_id: 105, date: '2025-11-04', amount: 189, status: 'Credited' },
+    { id: 6, transactionName: 'Order #2022', user_id: 106, date: '2025-09-29', amount: 89, status: 'Debited' },
+    { id: 7, transactionName: 'Renewal Payment', user_id: 107, date: '2025-10-10', amount: 299, status: 'Credited' },
+    { id: 8, transactionName: 'Chargeback', user_id: 108, date: '2025-08-22', amount: 150, status: 'Debited' },
+    { id: 9, transactionName: 'Invoice #1010', user_id: 109, date: '2025-09-05', amount: 350, status: 'Credited' },
+    { id: 10, transactionName: 'Invoice #1011', user_id: 110, date: '2025-11-06', amount: 110, status: 'Debited' },
+  ])
 
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState<number>(1)
-  const pageSize = 5
+  const pageSize = 10
 
+  // 🔍 Filter data by Transaction ID only
   const filteredData = useMemo(() => {
     return transactionsData.filter((item) =>
-      item.transactionName.toLowerCase().includes(searchTerm.toLowerCase())
+      item.id.toString().includes(searchTerm.trim())
     )
   }, [transactionsData, searchTerm])
 
@@ -43,51 +47,60 @@ const TransactionsPage: React.FC = () => {
     [filteredData, currentPage]
   )
 
+  // 🧱 Table columns
   const columns = useMemo<ColumnDef<Transaction>[]>(
     () => [
       {
-        header: 'Transaction Name',
-        accessorKey: 'transactionName',
-        cell: (info) => (
-          <span className='fw-semibold text-dark'>
-            {info.getValue() as string}
-          </span>
-        ),
+        header: 'Transaction ID',
+        accessorKey: 'id',
+        cell: (info) => <span className='fw-semibold text-dark'>{info.getValue() as number}</span>,
       },
       {
-        header: 'Created Date',
-        accessorKey: 'createdAt',
-        cell: (info) => (
-          <span className='text-dark'>
-            {info.getValue() as string}
-          </span>
-        ),
+        header: 'User ID',
+        accessorKey: 'user_id',
+        cell: (info) => <span className='text-dark'>{info.getValue() as number}</span>,
       },
       {
-        header: 'Actions',
-        id: 'actions',
+        header: 'Date',
+        accessorKey: 'date',
+        cell: (info) => <span className='text-dark'>{info.getValue() as string}</span>,
+      },
+      {
+        header: 'Amount',
+        accessorKey: 'amount',
+        cell: (info) => <span className='text-dark fw-semibold'>{info.getValue() as number}</span>,
+      },
+      {
+        header: 'Status',
+        id: 'status',
         cell: (info) => {
           const transaction = info.row.original
+          const isCredited = transaction.status === 'Credited'
+
           return (
-            <div className='d-flex justify-content-end gap-2'>
+            <div className='d-flex justify-content-center'>
               <button
-                className='btn btn-sm btn-light-primary px-3'
-                onClick={() => alert(`Edit: ${transaction.transactionName}`)}
+                className={`btn btn-sm fw-semibold px-5 ${
+                  isCredited ? 'btn-light-success' : 'btn-light-danger'
+                }`}
+                onClick={() =>
+                  setTransactionsData((prev) =>
+                    prev.map((t) =>
+                      t.id === transaction.id
+                        ? { ...t, status: isCredited ? 'Debited' : 'Credited' }
+                        : t
+                    )
+                  )
+                }
               >
-                <i className='bi bi-pencil-square'></i> Edit
-              </button>
-              <button
-                className='btn btn-sm btn-light-danger px-3'
-                onClick={() => alert(`Delete: ${transaction.transactionName}`)}
-              >
-                <i className='bi bi-trash'></i> Delete
+                {isCredited ? 'Credited' : 'Debited'}
               </button>
             </div>
           )
         },
       },
     ],
-    []
+    [transactionsData]
   )
 
   const table = useReactTable({
@@ -97,8 +110,8 @@ const TransactionsPage: React.FC = () => {
   })
 
   return (
-    <div className='container-fluid mt-15' style={{ maxWidth: '95%' }}>
-      {/* 🔹 Page Title */}
+    <div className='container-fluid mt-20' style={{ maxWidth: '95%' }}>
+      {/* 🔹 Page Header */}
       <div
         className='d-flex align-items-center justify-content-start mb-5'
         style={{
@@ -107,19 +120,12 @@ const TransactionsPage: React.FC = () => {
           color: '#fff',
         }}
       >
-        <h1
-          className='fw-bold mb-0'
-          style={{
-            fontSize: '1.2rem',
-            letterSpacing: '0.3px',
-            color: '#fff',
-          }}
-        >
-          Transaction Management
+        <h1 className='fw-bold mb-0 ms-0' style={{ fontSize: '1.3rem', letterSpacing: '0.3px', color: '#fff' }}>
+          Transactions Management
         </h1>
       </div>
 
-      {/* 🔹 Table Card */}
+      {/* 🔹 Table Section */}
       <div
         className='py-5'
         style={{
@@ -129,26 +135,25 @@ const TransactionsPage: React.FC = () => {
           padding: '60px',
         }}
       >
-        {/* Header Row with Title and Search */}
+        {/* Header: Title + Search */}
         <div className='d-flex justify-content-between align-items-center mb-4'>
           <h4 className='fw-bold text-primary mb-0'>Transactions</h4>
 
-          {/* 🔍 Search bar (Top-right of table) */}
+          {/* Search bar */}
           <div
             className='d-flex align-items-center px-3 py-1 shadow-sm'
             style={{
               backgroundColor: '#f5f8fa',
               borderRadius: '5px',
               border: '1px solid #e1e3ea',
-              width: '180px',
-              transition: 'all 0.3s ease',
+              width: '200px',
             }}
           >
             <i className='bi bi-search text-muted me-2'></i>
             <input
               type='text'
               className='form-control border-0 bg-transparent'
-              placeholder='Search transactions...'
+              placeholder='Search by ID...'
               style={{ outline: 'none', boxShadow: 'none', fontSize: '0.9rem' }}
               value={searchTerm}
               onChange={(e) => {
@@ -164,21 +169,19 @@ const TransactionsPage: React.FC = () => {
           <table className='table table-hover align-middle'>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
-                <tr
-                  key={headerGroup.id}
-                  className='text-muted text-uppercase fs-7 border-bottom'
-                >
+                <tr key={headerGroup.id} className='text-muted text-uppercase fs-7 border-bottom'>
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
                       className={`py-3 ${
-                        header.column.id === 'actions' ? 'text-end pe-3' : ''
+                        header.column.id === 'actions'
+                          ? 'text-end pe-3'
+                          : header.column.id === 'status'
+                          ? 'text-center'
+                          : ''
                       }`}
                     >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                      {flexRender(header.column.columnDef.header, header.getContext())}
                     </th>
                   ))}
                 </tr>
@@ -193,23 +196,21 @@ const TransactionsPage: React.FC = () => {
                       <td
                         key={cell.id}
                         className={`${
-                          cell.column.id === 'actions' ? 'text-end pe-3' : ''
+                          cell.column.id === 'actions'
+                            ? 'text-end pe-3'
+                            : cell.column.id === 'status'
+                            ? 'text-center'
+                            : ''
                         }`}
                       >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
                     ))}
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td
-                    colSpan={columns.length}
-                    className='text-center py-5 text-muted'
-                  >
+                  <td colSpan={columns.length} className='text-center py-5 text-muted'>
                     No transactions found.
                   </td>
                 </tr>

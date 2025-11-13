@@ -1,6 +1,6 @@
-import {FC, useEffect} from 'react'
-import {MenuInner} from './MenuInner'
-import {SwapperComponent} from '../../../assets/ts/components'
+import { FC, useEffect } from 'react'
+import { MenuInner } from './MenuInner'
+import { SwapperComponent } from '../../../assets/ts/components'
 
 const Header: FC = () => {
   useEffect(() => {
@@ -23,14 +23,15 @@ const Header: FC = () => {
       data-kt-swapper-parent="{default: '#kt_body', lg: '#kt_header_nav'}"
     >
       <div
-        className='menu menu-lg-rounded menu-column menu-lg-row menu-state-bg menu-title-gray-100 menu-state-title-primary menu-state-icon-primary menu-state-bullet-light-primary menu-arrow-gray-500 fw-bold my-5 my-lg-0 align-items-stretch'
-        id='#kt_header_menu'
+        className='menu menu-lg-rounded menu-column menu-lg-row menu-state-bg menu-title-gray-100 menu-state-title-primary menu-state-icon-primary menu-state-bullet-light-primary menu-arrow-gray-500 fw-bold my-5 my-lg-0 align-items-stretch '
+        id='kt_header_menu'
         data-kt-menu='true'
       >
         <MenuInner />
       </div>
+
     </div>
   )
 }
 
-export {Header}
+export { Header }

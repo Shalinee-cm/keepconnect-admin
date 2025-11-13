@@ -1,34 +1,35 @@
 import React, { useMemo, useState } from 'react'
-import { useReactTable, getCoreRowModel, flexRender, ColumnDef } from '@tanstack/react-table'
+import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+  ColumnDef,
+} from '@tanstack/react-table'
+import { SubscriptionsEditModalForm } from './SubscriptionsEditModalForm' // ✅ import modal
 
 type Subscription = {
-  id: number
+  subscription_id: number
   planName: string
   slug: string
+  amount: number
+  user_count: number
+  isActive: boolean
 }
 
+// Dummy Data
 const initialData: Subscription[] = [
-  { id: 1, planName: 'Basic Plan', slug: 'basic-plan' },
-  { id: 2, planName: 'Pro Plan', slug: 'pro-plan' },
-  { id: 3, planName: 'Enterprise Plan', slug: 'enterprise-plan' },
-  { id: 4, planName: 'Startup Plan', slug: 'startup-plan' },
-  { id: 5, planName: 'Premium Plan', slug: 'premium-plan' },
-  { id: 6, planName: 'Advanced Plan', slug: 'advanced-plan' },
-  { id: 7, planName: 'Team Plan', slug: 'team-plan' },
-  { id: 8, planName: 'Solo Plan', slug: 'solo-plan' },
-  { id: 9, planName: 'Unlimited Plan', slug: 'unlimited-plan' },
-  { id: 10, planName: 'Trial Plan', slug: 'trial-plan' },
-  { id: 11, planName: 'Business Plan', slug: 'business-plan' },
-  { id: 12, planName: 'Ultimate Plan', slug: 'ultimate-plan' },
+  { subscription_id: 1, planName: 'Startup Plan', slug: 'startup-plan', amount: 49, user_count: 15, isActive: true },
+  { subscription_id: 2, planName: 'Enterprise Plan', slug: 'enterprise-plan', amount: 199, user_count: 100, isActive: false },
+  { subscription_id: 3, planName: 'Premium Plan', slug: 'premium-plan', amount: 99, user_count: 40, isActive: true },
 ]
 
 export const SubscriptionsPage: React.FC = () => {
   const [data, setData] = useState<Subscription[]>(initialData)
   const [searchTerm, setSearchTerm] = useState('')
-  const [currentPage, setCurrentPage] = useState(1)
-  const pageSize = 5
+  const [selectedPlan, setSelectedPlan] = useState<Subscription | null>(null)
+  const [showModal, setShowModal] = useState(false)
 
-  // 🔍 Filter Data
+  // 🔍 Filter data
   const filteredData = useMemo(() => {
     return data.filter(
       (item) =>
@@ -37,39 +38,84 @@ export const SubscriptionsPage: React.FC = () => {
     )
   }, [data, searchTerm])
 
-  // Pagination
-  const paginatedData = useMemo(() => {
-    const start = (currentPage - 1) * pageSize
-    return filteredData.slice(start, start + pageSize)
-  }, [filteredData, currentPage])
+  // 🧭 Toggle Active/Inactive
+  const handleToggleStatus = (plan: Subscription) => {
+    setData((prev) =>
+      prev.map((p) =>
+        p.subscription_id === plan.subscription_id
+          ? { ...p, isActive: !p.isActive }
+          : p
+      )
+    )
+  }
 
-  const totalPages = Math.ceil(filteredData.length / pageSize)
-
-  // Actions
+  // ✏️ Open Modal
   const handleEdit = (plan: Subscription) => {
-    alert(`Editing subscription: ${plan.planName}`)
+    setSelectedPlan(plan)
+    setShowModal(true)
   }
 
-  const handleDelete = (plan: Subscription) => {
-    if (window.confirm(`Are you sure you want to delete ${plan.planName}?`)) {
-      setData((prev) => prev.filter((item) => item.id !== plan.id))
-    }
+  // 💾 Save Edited Plan
+  const handleSave = (updatedPlan: any) => {
+    setData((prev) =>
+      prev.map((p) =>
+        p.subscription_id === selectedPlan?.subscription_id
+          ? {
+              ...p,
+              planName: updatedPlan.name,
+              amount: updatedPlan.amount,
+              slug: updatedPlan.name.toLowerCase().replace(/\s+/g, '-'),
+            }
+          : p
+      )
+    )
+    setShowModal(false)
+    setSelectedPlan(null)
   }
 
-  // Columns
+  // ❌ Close Modal
+  const handleCancel = () => {
+    setShowModal(false)
+    setSelectedPlan(null)
+  }
+
+  // 🧱 Table Columns
   const columns = useMemo<ColumnDef<Subscription>[]>(
     () => [
+      { header: 'SUBSCRIPTION ID', accessorKey: 'subscription_id' },
       {
-        header: 'Subscription Plan',
+        header: 'Plan Name',
         accessorKey: 'planName',
-        cell: (info) => (
-          <span className='fw-semibold text-dark'>{info.getValue() as string}</span>
-        ),
+        cell: (info) => <span className='fw-semibold text-dark'>{info.getValue() as string}</span>,
       },
+      { header: 'Amount', accessorKey: 'amount' },
+      { header: 'Users COUNT', accessorKey: 'user_count' },
       {
-        header: 'Slug',
-        accessorKey: 'slug',
-        cell: (info) => <span className='text-dark'>{info.getValue() as string}</span>,
+        header: 'Status',
+        id: 'status',
+        cell: (info) => {
+          const plan = info.row.original
+          return (
+            <div className='text-end'>
+              <button
+                className={`btn btn-sm px-3 fw-semibold ${
+                  plan.isActive ? 'btn-light-success' : 'btn-light-danger'
+                }`}
+                onClick={() => handleToggleStatus(plan)}
+              >
+                {plan.isActive ? (
+                  <>
+                    <i className='bi bi-check-circle me-1 text-success'></i> Active
+                  </>
+                ) : (
+                  <>
+                    <i className='bi bi-x-circle me-1 text-danger'></i> Inactive
+                  </>
+                )}
+              </button>
+            </div>
+          )
+        },
       },
       {
         header: 'Actions',
@@ -77,18 +123,12 @@ export const SubscriptionsPage: React.FC = () => {
         cell: (info) => {
           const plan = info.row.original
           return (
-            <div className='d-flex justify-content-end gap-2'>
+            <div className='d-flex justify-content-end'>
               <button
                 className='btn btn-sm btn-light-primary px-3'
                 onClick={() => handleEdit(plan)}
               >
                 <i className='bi bi-pencil-square'></i> Edit
-              </button>
-              <button
-                className='btn btn-sm btn-light-danger px-3'
-                onClick={() => handleDelete(plan)}
-              >
-                <i className='bi bi-trash'></i> Delete
               </button>
             </div>
           )
@@ -99,35 +139,21 @@ export const SubscriptionsPage: React.FC = () => {
   )
 
   const table = useReactTable({
-    data: paginatedData,
+    data: filteredData,
     columns,
     getCoreRowModel: getCoreRowModel(),
   })
 
   return (
     <div className='container-fluid mt-15'>
-      {/* ✅ Page Header */}
-      <div
-        className='d-flex align-items-center justify-content-start mb-5'
-        style={{
-          borderRadius: '8px',
-          padding: '10px 20px',
-          color: '#fff',
-        }}
-      >
-        <h1
-          className='fw-bold mb-0'
-          style={{
-            fontSize: '1.2rem',
-            letterSpacing: '0.3px',
-            color: '#fff',
-          }}
-        >
-          Subscription Management
+      {/* Header */}
+      <div className='d-flex align-items-center justify-content-start mb-5'>
+        <h1 className='fw-bold text-white ms-15 mb-6 mt-10' style={{ fontSize: '1.3rem' }}>
+          Subscriptions Management
         </h1>
       </div>
 
-      {/* ✅ Main Card/Table Section */}
+      {/* Table Card */}
       <div
         className='py-5'
         style={{
@@ -139,36 +165,27 @@ export const SubscriptionsPage: React.FC = () => {
           padding: '60px',
         }}
       >
-        {/* Header Row: Title + Search */}
+        {/* Top Bar */}
         <div className='d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3'>
           <h4 className='fw-bold text-primary mb-0'>Subscriptions</h4>
 
-          {/* 🔍 Oval Search Bar */}
+          {/* Search */}
           <div
-            className='d-flex align-items-center px-3 py-1 shadow-sm'
+            className='d-flex align-items-center px-3 py-0 shadow-sm'
             style={{
               backgroundColor: '#f5f8fa',
               borderRadius: '5px',
               border: '1px solid #e1e3ea',
               width: '180px',
-              transition: 'all 0.3s ease',
             }}
           >
             <i className='bi bi-search text-muted me-2'></i>
             <input
               type='text'
               className='form-control border-0 bg-transparent'
-              placeholder='Search subscriptions...'
-              style={{
-                outline: 'none',
-                boxShadow: 'none',
-                fontSize: '0.9rem',
-              }}
+              placeholder='Search...'
               value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value)
-                setCurrentPage(1)
-              }}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </div>
@@ -178,15 +195,14 @@ export const SubscriptionsPage: React.FC = () => {
           <table className='table table-hover align-middle'>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
-                <tr
-                  key={headerGroup.id}
-                  className='text-muted text-uppercase fs-7 border-bottom'
-                >
+                <tr key={headerGroup.id} className='text-muted text-uppercase fs-7 border-bottom'>
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
                       className={`py-3 ${
-                        header.column.id === 'actions' ? 'text-end pe-3' : 'ps-2'
+                        header.column.id === 'actions' || header.column.id === 'status'
+                          ? 'text-end pe-3'
+                          : 'ps-2'
                       }`}
                     >
                       {flexRender(header.column.columnDef.header, header.getContext())}
@@ -204,7 +220,9 @@ export const SubscriptionsPage: React.FC = () => {
                       <td
                         key={cell.id}
                         className={`${
-                          cell.column.id === 'actions' ? 'text-end pe-3' : 'ps-2'
+                          cell.column.id === 'actions' || cell.column.id === 'status'
+                            ? 'text-end pe-3'
+                            : 'ps-2'
                         }`}
                       >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -222,30 +240,21 @@ export const SubscriptionsPage: React.FC = () => {
             </tbody>
           </table>
         </div>
-
-        {/* Pagination */}
-        <div className='d-flex justify-content-between align-items-center mt-4'>
-          <span className='text-muted'>
-            Page {currentPage} of {totalPages}
-          </span>
-          <div>
-            <button
-              className='btn btn-sm btn-light me-2'
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-            >
-              Previous
-            </button>
-            <button
-              className='btn btn-sm btn-primary'
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-            >
-              Next
-            </button>
-          </div>
-        </div>
       </div>
+
+      {/* 🔹 Edit Modal */}
+      {showModal && (
+        <SubscriptionsEditModalForm
+          plan={{
+            name: selectedPlan?.planName || '',
+            description: selectedPlan?.slug || '',
+            amount: selectedPlan?.amount || 0,
+            tenure: selectedPlan?.isActive ? 'Active' : 'Inactive',
+          }}
+          onSubmit={handleSave}
+          onCancel={handleCancel}
+        />
+      )}
     </div>
   )
 }

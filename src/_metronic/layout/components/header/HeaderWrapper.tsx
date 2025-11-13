@@ -60,12 +60,12 @@ export function HeaderWrapper() {
             <img
               alt='Logo'
               src={toAbsoluteUrl('media/logos/KeepConnect.svg')}
-              className='logo-default h-46px'
+              className='logo-default h-47px'
             />
             <img
               alt='Logo'
               src={toAbsoluteUrl('media/logos/KeepConnect.svg')}
-              className='logo-sticky h-46px'
+              className='logo-sticky h-47px'
             />
           </Link>
         </div>

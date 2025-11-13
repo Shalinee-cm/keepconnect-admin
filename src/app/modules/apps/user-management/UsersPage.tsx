@@ -12,7 +12,7 @@ import { UserEditModalForm } from './users-list/user-edit-modal/UserEditModalFor
 // 🔹 Breadcrumbs
 const usersBreadcrumbs: Array<PageLink> = [
   {
-    title: 'User Management',
+    title: 'Users Management',
     path: '/apps/user-management/users',
     isSeparator: false,
     isActive: false,
@@ -23,29 +23,29 @@ const usersBreadcrumbs: Array<PageLink> = [
 // 🔹 Users List Wrapper
 const UsersListWrapper: React.FC = () => {
   const usersData = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', position: 'Acme Corp', phone: '9876543210' },
-  { id: 2, name: 'Sarah Johnson', email: 'sarah@example.com', position: 'TechSoft', phone: '7896541230' },
-  { id: 3, name: 'Amit Verma', email: 'amit@example.com', position: 'Verma Traders', phone: '9988776655' },
-  { id: 4, name: 'Priya Sharma', email: 'priya.sharma@innovex.in', position: 'Innovex Solutions', phone: '9823456712' },
-  { id: 5, name: 'Michael Smith', email: 'michael@alphatech.com', position: 'AlphaTech', phone: '9123456789' },
-  { id: 6, name: 'Ravi Patel', email: 'ravi.patel@globex.com', position: 'Globex Corporation', phone: '9785643210' },
-  { id: 7, name: 'Emily Davis', email: 'emily.davis@brightlabs.com', position: 'Bright Labs', phone: '7890654321' },
-  { id: 8, name: 'Ananya Gupta', email: 'ananya@nextgen.io', position: 'NextGen Innovations', phone: '9912345678' },
-  { id: 9, name: 'Daniel Wilson', email: 'daniel@softlink.com', position: 'SoftLink Systems', phone: '8899776655' },
-  { id: 10, name: 'Neha Kapoor', email: 'neha.kapoor@bluewave.co', position: 'BlueWave Technologies', phone: '9812365470' },
-  { id: 11, name: 'Carlos Hernandez', email: 'carlos@microzone.com', position: 'Microzone', phone: '9998887770' },
-  { id: 12, name: 'Meera Nair', email: 'meera.nair@infotech.in', position: 'InfoTech India', phone: '9845123678' },
-  { id: 13, name: 'David Brown', email: 'david@northstar.com', position: 'NorthStar Solutions', phone: '9745612309' },
-  { id: 14, name: 'Sanya Singh', email: 'sanya@quantumsoft.io', position: 'QuantumSoft', phone: '9764312580' },
-  { id: 15, name: 'Olivia Miller', email: 'olivia.miller@novanet.com', position: 'NovaNet', phone: '9632147850' },
+    { id: 1, name: 'John Doe', email: 'john@example.com', position: 'Acme Corp', phone: '9876543210', isActive: true },
+    { id: 2, name: 'Sarah Johnson', email: 'sarah@example.com', position: 'TechSoft', phone: '7896541230', isActive: false },
+    { id: 3, name: 'Amit Verma', email: 'amit@example.com', position: 'Verma Traders', phone: '9988776655', isActive: true },
+    { id: 4, name: 'Priya Sharma', email: 'priya.sharma@innovex.in', position: 'Innovex Solutions', phone: '9823456712', isActive: true },
+    { id: 5, name: 'Michael Smith', email: 'michael@alphatech.com', position: 'AlphaTech', phone: '9123456789', isActive: false },
+    { id: 6, name: 'Ravi Patel', email: 'ravi.patel@globex.com', position: 'Globex Corporation', phone: '9785643210', isActive: true },
+    { id: 7, name: 'Emily Davis', email: 'emily.davis@brightlabs.com', position: 'Bright Labs', phone: '7890654321', isActive: false },
+    { id: 8, name: 'Ananya Gupta', email: 'ananya@nextgen.io', position: 'NextGen Innovations', phone: '9912345678', isActive: true },
+    { id: 9, name: 'Daniel Wilson', email: 'daniel@softlink.com', position: 'SoftLink Systems', phone: '8899776655', isActive: true },
+    { id: 10, name: 'Neha Kapoor', email: 'neha.kapoor@bluewave.co', position: 'BlueWave Technologies', phone: '9812365470', isActive: true },
+    { id: 11, name: 'Carlos Hernandez', email: 'carlos@microzone.com', position: 'Microzone', phone: '9998887770', isActive: false },
+    { id: 12, name: 'Meera Nair', email: 'meera.nair@infotech.in', position: 'InfoTech India', phone: '9845123678', isActive: true },
+    { id: 13, name: 'David Brown', email: 'david@northstar.com', position: 'NorthStar Solutions', phone: '9745612309', isActive: true },
+    { id: 14, name: 'Sanya Singh', email: 'sanya@quantumsoft.io', position: 'QuantumSoft', phone: '9764312580', isActive: true },
+    { id: 15, name: 'Olivia Miller', email: 'olivia.miller@novanet.com', position: 'NovaNet', phone: '9632147850', isActive: false },
   ]
-  
+
   const [data, setData] = useState(usersData)
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState<any | null>(null)
-  const pageSize = 5
+  const pageSize = 10
 
   const filteredData = useMemo(
     () =>
@@ -65,30 +65,43 @@ const UsersListWrapper: React.FC = () => {
     [filteredData, currentPage]
   )
 
+  // ✅ Toggle Active/Inactive
+  const handleToggleStatus = (user: any) => {
+    setData((prev) =>
+      prev.map((u) =>
+        u.id === user.id ? { ...u, isActive: !u.isActive } : u
+      )
+    )
+  }
+
   const columns = useMemo<ColumnDef<any>[]>(
     () => [
       { header: 'Full Name', accessorKey: 'name' },
       { header: 'Business Name', accessorKey: 'position' },
       { header: 'Phone Number', accessorKey: 'phone' },
-      { header: 'Email', accessorKey: 'email' },
+      { header: 'Email ID', accessorKey: 'email' },
       {
-        header: 'Actions',
+        header: 'Status',
         id: 'actions',
         cell: (info) => {
           const user = info.row.original
           return (
-            <div className='d-flex justify-content-end gap-2'>
+            <div className='d-flex justify-content-end'>
               <button
-                className='btn btn-sm btn-light-primary px-3'
-                onClick={() => handleEdit(user)}
+                className={`btn btn-sm px-3 fw-semibold ${
+                  user.isActive ? 'btn-light-success' : 'btn-light-danger'
+                }`}
+                onClick={() => handleToggleStatus(user)}
               >
-                <i className='bi bi-pencil-square'></i> Edit
-              </button>
-              <button
-                className='btn btn-sm btn-light-danger px-3'
-                onClick={() => handleDelete(user)}
-              >
-                <i className='bi bi-trash'></i> Delete
+                {user.isActive ? (
+                  <>
+                    <i className='bi bi-check-circle me-1 text-success'></i> Active
+                  </>
+                ) : (
+                  <>
+                    <i className='bi bi-x-circle me-1 text-danger'></i> Inactive
+                  </>
+                )}
               </button>
             </div>
           )
@@ -108,7 +121,7 @@ const UsersListWrapper: React.FC = () => {
     if (selectedUser) {
       setData((prev) => prev.map((u) => (u.id === selectedUser.id ? { ...u, ...user } : u)))
     } else {
-      const newEntry = { id: Date.now(), ...user }
+      const newEntry = { id: Date.now(), isActive: true, ...user }
       setData([...data, newEntry])
     }
     setIsModalOpen(false)
@@ -120,27 +133,16 @@ const UsersListWrapper: React.FC = () => {
     setSelectedUser(null)
   }
 
-  const handleEdit = (user: any) => {
-    setSelectedUser(user)
-    setIsModalOpen(true)
-  }
-
-  const handleDelete = (user: any) => {
-    if (window.confirm(`Are you sure you want to delete ${user.name}?`)) {
-      setData((prev) => prev.filter((u) => u.id !== user.id))
-    }
-  }
-
   return (
-    <div className='container-fluid mt-20' style={{ maxWidth: '95%' }}>
+    <div className='container-fluid mt-15' style={{ maxWidth: '95%' }}>
       <div className='d-flex align-items-center justify-content-start mb-10'>
-        <h1 className='fw-bold mb-0' style={{ fontSize: '1.2rem', color: '#fff' }}>
-          User Management
+        <h1 className='fw-bold mt-10 ms-3' style={{ fontSize: '1.3rem', color: '#fff' }}>
+          Users Management
         </h1>
       </div>
 
       <div
-        className='py-5 '
+        className='py-5'
         style={{
           backgroundColor: '#fff',
           borderRadius: '12px',
@@ -150,8 +152,6 @@ const UsersListWrapper: React.FC = () => {
       >
         <div className='d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3'>
           <h4 className='fw-bold text-primary mb-0'>Users List</h4>
-              
-          
 
           <div className='d-flex align-items-center gap-3'>
             <div
@@ -186,7 +186,7 @@ const UsersListWrapper: React.FC = () => {
         </div>
 
         {/* ✅ Table */}
-        <div className='table-responsive ' >
+        <div className='table-responsive'>
           <table className='table table-hover align-middle'>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -280,7 +280,7 @@ const UsersPage = () => (
         path='users'
         element={
           <>
-            <PageTitle breadcrumbs={usersBreadcrumbs}>User Management</PageTitle>
+            <PageTitle breadcrumbs={usersBreadcrumbs} >Users Management</PageTitle>
             <UsersListWrapper />
           </>
         }

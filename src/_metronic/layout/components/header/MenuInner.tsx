@@ -130,8 +130,8 @@ export function MenuInner() {
           <MenuItem to='/apps/chat/group-chat' title='Group Chart' hasBullet={true} />
           <MenuItem to='/apps/chat/drawer-chat' title='Drawer Chart' hasBullet={true} /> */}
         {/* </MenuInnerWithSub> */}
-        {/* <MenuItem icon='shield-tick' to='/apps/roles-management/roles' title='Roles list' />
-      </MenuInnerWithSub> */}
+        {/* <MenuItem icon='shield-tick' to='/apps/roles-management/roles' title='Roles list' /> */}
+      {/* </MenuInnerWithSub> */}
 
       {/* <MenuInnerWithSub title='Permissions' to='/apps/permissions-management/permissions'  menuPlacement='bottom-start'> */}
         {/* PAGES */}
@@ -147,11 +147,11 @@ export function MenuInner() {
           <MenuItem to='/apps/chat/drawer-chat' title='Drawer Chart' hasBullet={true} /> */}
         {/* </MenuInnerWithSub> */}
 
-        {/* <MenuItem icon='shield-tick' to='/apps/permissions-management/permissions' title='Permission list' />
-      </MenuInnerWithSub> */}
+        {/* {/* <MenuItem icon='shield-tick' to='/apps/permissions-management/permissions' title='Permission list' /> */}
+      {/* </MenuInnerWithSub>  */}
 
       <MenuItem title='Subscription' to='/apps/subscriptions-management/subscriptions'/>
-      <MenuItem title='Transaction' to='/apps/transactions-management/transactions'  />
+      <MenuItem title='Transactions' to='/apps/transactions-management/transactions'  />
     </>
   )
 }
