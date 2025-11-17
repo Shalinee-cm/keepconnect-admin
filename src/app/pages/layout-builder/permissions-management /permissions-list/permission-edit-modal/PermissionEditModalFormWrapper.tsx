@@ -19,11 +19,11 @@ const PermissionEditModalFormWrapper = () => {
   )
 
   if (!itemIdForUpdate) {
-    return <PermissionEditModalForm isUserLoading={isLoading} user={{id: undefined}} />
+    // return <PermissionEditModalForm isUserLoading={isLoading} user={{id: undefined}} />
   }
 
   if (!isLoading && !error && user) {
-    return <PermissionEditModalForm isUserLoading={isLoading} user={user} />
+    // return <PermissionEditModalForm isUserLoading={isLoading} user={user} />
   }
 
   return null

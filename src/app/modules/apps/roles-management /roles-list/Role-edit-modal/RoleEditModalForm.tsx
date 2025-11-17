@@ -30,6 +30,7 @@ type Props = {
 
 const RoleEditModalForm: FC<Props> = ({ role, onClose, onSave }) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  
 
   const allPermissions = [
     'View Users',

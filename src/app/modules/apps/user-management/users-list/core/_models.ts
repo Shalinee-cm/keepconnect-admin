@@ -1,3 +1,4 @@
+import { number } from 'yup'
 import {ID, Response} from '../../../../../../_metronic/helpers'
 export type User = {
   id?: ID
@@ -10,6 +11,7 @@ export type User = {
   two_steps?: boolean
   joined_day?: string
   online?: boolean
+  phone: string
   initials?: {
     label: string
     state: string
@@ -24,4 +26,5 @@ export const initialUser: User = {
   role: 'Administrator',
   name: '',
   email: '',
+  phone:'',
 }

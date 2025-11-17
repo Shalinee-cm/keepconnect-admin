@@ -191,7 +191,7 @@ export const SubscriptionsPage: React.FC = () => {
         </div>
 
         {/* Table */}
-        <div className='table-responsive'>
+        <div className='table-responsive px-15'>
           <table className='table table-hover align-middle'>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (

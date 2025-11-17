@@ -127,7 +127,7 @@ const TransactionsPage: React.FC = () => {
 
       {/* 🔹 Table Section */}
       <div
-        className='py-5'
+        className='py-5 px-20'
         style={{
           backgroundColor: '#fff',
           borderRadius: '12px',
